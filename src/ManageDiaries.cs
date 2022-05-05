@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Oracle.DataAccess.Types;
 using Oracle.DataAccess.Client;
+using Personal_Diary;
 
 namespace WindowsFormsApplication4
 {
@@ -16,22 +17,11 @@ namespace WindowsFormsApplication4
 
         OracleDataAdapter adapter;
         OracleCommandBuilder builder;
-        DataSet ds;
+        DataSet ds = new DataSet();
 
         public ManageDiaries()
         {
             InitializeComponent();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            string constr = "Data Source=orcl ;User Id=scott ; Password=tiger;";
-            string cmdstr = "Select * from Diary Where username= :name";
-            adapter = new OracleDataAdapter(cmdstr, constr);
-            adapter.SelectCommand.Parameters.Add("name", textBox1.Text);
-            ds = new DataSet();
-            adapter.Fill(ds);
-            dataGridView1.DataSource = ds.Tables[0];
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -40,9 +30,35 @@ namespace WindowsFormsApplication4
             adapter.Update(ds.Tables[0]);
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void ManageDiaries_Load(object sender, EventArgs e)
         {
+            string cmdstr = "Select * from Diary Where username=:name";
+            adapter = new OracleDataAdapter(cmdstr, Globals.ordb);
+            adapter.SelectCommand.Parameters.Add("name", Globals.username);
+            adapter.Fill(ds);
+            dataGridView1.DataSource = ds.Tables[0];
+            saveBtn.Enabled = true;
+        }
 
+        private void tasksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new ManageTasks().ShowDialog();
+            Show();
+        }
+
+        private void tasksToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new TasksReport().ShowDialog();
+            Show();
+        }
+
+        private void diariesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new DiariesReport().ShowDialog();
+            Show();
         }
     }
 }

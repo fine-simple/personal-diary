@@ -1,7 +1,7 @@
 CREATE TABLE DiaryUser
 (
   UserName VARCHAR(40) NOT NULL,
-  Password CHAR(40) NOT NULL,
+  Password VARCHAR(40) NOT NULL,
   Firstname VARCHAR(40) NOT NULL,
   Lastname VARCHAR(40) NOT NULL,
   PRIMARY KEY (UserName)

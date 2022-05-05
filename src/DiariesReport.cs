@@ -14,21 +14,17 @@ namespace WindowsFormsApplication4
 {
     public partial class DiariesReport : Form
     {
-        DiariesCrystalReport CR;
+        Personal_Diary.DiariesCrystalReport CR;
 
         public DiariesReport()
         {
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            crystalReportViewer1.ReportSource = CR;
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
-            CR = new DiariesCrystalReport();
+            CR = new Personal_Diary.DiariesCrystalReport();
+            crystalReportViewer1.ReportSource = CR;
         }
     }
 }

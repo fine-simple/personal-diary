@@ -7,35 +7,24 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using CrystalDecisions.Shared;
+using Personal_Diary;
+
 namespace WindowsFormsApplication4
 {
     public partial class TasksReport : Form
     {
-        TasksCrystalReport Cr2;
+        Personal_Diary.TasksCrystalReport Cr2;
         public TasksReport()
         {
             InitializeComponent();
         }
 
-        private void crystalReportViewer1_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void Form2_Load(object sender, EventArgs e)
         {
-            Cr2 = new TasksCrystalReport();
-        }
+            Cr2 = new Personal_Diary.TasksCrystalReport();
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Cr2.SetParameterValue(0, textBox1.Text);
+            Cr2.SetParameterValue(0, Globals.username);
             crystalReportViewer2.ReportSource = Cr2;
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
         
