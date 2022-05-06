@@ -60,5 +60,28 @@ namespace WindowsFormsApplication4
             new DiariesReport().ShowDialog();
             Show();
         }
+
+        private void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+            bool addNew = e.RowIndex == dataGridView1.Rows.Count - 1;
+            string diaryTitle = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+            string content = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
+            Diary diary = new Diary(diaryTitle, content);
+            diary.ShowDialog();
+            if (diary.DialogResult != DialogResult.OK)
+                return;
+            if(addNew)
+            {
+                //DataTable table = (DataTable)dataGridView1.DataSource;
+                //table.Rows.Add(diary.getTitle(), diary.getContent());
+            }
+            else
+            {
+                dataGridView1.Rows[e.RowIndex].Cells[0].Value = diary.getTitle();
+                dataGridView1.Rows[e.RowIndex].Cells[1].Value = diary.getContent();
+            }
+        }
     }
 }

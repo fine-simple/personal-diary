@@ -85,7 +85,7 @@
             // tasksToolStripMenuItem
             // 
             this.tasksToolStripMenuItem.Name = "tasksToolStripMenuItem";
-            this.tasksToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.tasksToolStripMenuItem.Size = new System.Drawing.Size(125, 26);
             this.tasksToolStripMenuItem.Text = "Tasks";
             this.tasksToolStripMenuItem.Click += new System.EventHandler(this.tasksToolStripMenuItem_Click);
             // 
@@ -101,14 +101,14 @@
             // tasksToolStripMenuItem1
             // 
             this.tasksToolStripMenuItem1.Name = "tasksToolStripMenuItem1";
-            this.tasksToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+            this.tasksToolStripMenuItem1.Size = new System.Drawing.Size(138, 26);
             this.tasksToolStripMenuItem1.Text = "Tasks";
             this.tasksToolStripMenuItem1.Click += new System.EventHandler(this.tasksToolStripMenuItem1_Click);
             // 
             // diariesToolStripMenuItem
             // 
             this.diariesToolStripMenuItem.Name = "diariesToolStripMenuItem";
-            this.diariesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.diariesToolStripMenuItem.Size = new System.Drawing.Size(138, 26);
             this.diariesToolStripMenuItem.Text = "Diaries";
             this.diariesToolStripMenuItem.Click += new System.EventHandler(this.diariesToolStripMenuItem_Click);
             // 
@@ -123,6 +123,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ManageDiaries";
+            this.ShowIcon = false;
             this.Text = "Manage Diaries";
             this.Load += new System.EventHandler(this.ManageDiaries_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

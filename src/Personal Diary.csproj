@@ -112,6 +112,12 @@
     <Compile Include="DiariesReport.Designer.cs">
       <DependentUpon>DiariesReport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Diary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Diary.Designer.cs">
+      <DependentUpon>Diary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
@@ -157,6 +163,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DiariesReport.resx">
       <DependentUpon>DiariesReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Diary.resx">
+      <DependentUpon>Diary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>

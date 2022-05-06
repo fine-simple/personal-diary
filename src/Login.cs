@@ -28,11 +28,11 @@ namespace Personal_Diary
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string cmdText = @"SELECT * FROM DiaryUser WHERE username=:name AND password=:pass";
-            OracleConnection conn = new OracleConnection(Globals.ordb);
-            conn.Open();
-            OracleCommand cmd = new OracleCommand(cmdText, conn);
+            Globals.conn.Open();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = Globals.conn;
             cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "SELECT * FROM DiaryUser WHERE username=:name AND password=:pass";
             cmd.Parameters.Add("name", usernameTxtBox.Text);
             cmd.Parameters.Add("pass", passTxtBox.Text.ToArray());
             OracleDataReader dr = cmd.ExecuteReader();
@@ -41,11 +41,13 @@ namespace Personal_Diary
             {
                 Hide();
                 Globals.username = dr["username"].ToString();
+                Globals.conn.Close();
                 new ManageDiaries().ShowDialog();
                 Close();
             }
             else
             {
+                Globals.conn.Close();
                 MessageBox.Show("Invalid Username or Password");
             }
         }

@@ -35,6 +35,19 @@ namespace Personal_Diary
             else if (passwordTxtBox.Text.Length < 4)
                 msg = "Password must be minimum of 4 characters";
 
+            Globals.conn.Open();
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = Globals.conn;
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "getUser";
+            cmd.Parameters.Add("name", usernameTxtBox.Text);
+            cmd.Parameters.Add("user", OracleDbType.Varchar2, 40, null, ParameterDirection.Output);
+            cmd.ExecuteNonQuery();
+
+            if (!((OracleString)cmd.Parameters["user"].Value).IsNull)
+                msg = "Username Already Exists";
+            Globals.conn.Close();
+
             if (msg != "")
             {
                 MessageBox.Show(msg, "Registeration Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -47,26 +60,19 @@ namespace Personal_Diary
         {
             if (!validateInput())
                 return;
-            OracleConnection conn = new OracleConnection(Globals.ordb);
-            conn.Open();
+            Globals.conn.Open();
             OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
+            cmd.Connection = Globals.conn;
             cmd.CommandType = CommandType.Text;
             cmd.CommandText = "INSERT INTO DiaryUser VALUES (:username, :password, :firstname, :lastname)";
             cmd.Parameters.Add("username", usernameTxtBox.Text);
             cmd.Parameters.Add("password", passwordTxtBox.Text);
             cmd.Parameters.Add("firstname", firstnameTxtBox.Text);
             cmd.Parameters.Add("lastname", lastnameTxtBox.Text);
-            if (cmd.ExecuteNonQuery() > 0)
-            {
-                MessageBox.Show("Registered Successfully");
-                Close();
-            }
-            else
-            {
-                MessageBox.Show("Username Already Exists");
-            }
-            conn.Dispose();
+            cmd.ExecuteNonQuery();
+            MessageBox.Show("Registered Successfully");
+            Close();
+            Globals.conn.Close();
         }
     }
 }
