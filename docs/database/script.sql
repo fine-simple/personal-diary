@@ -12,14 +12,14 @@ CREATE TABLE Diary
   DiaryTitle VARCHAR(100) NOT NULL,
   DiaryContent VARCHAR(500) NOT NULL,
   UserName VARCHAR(40) NOT NULL,
-  PRIMARY KEY (DiaryTitle),
+  PRIMARY KEY (DiaryTitle, UserName),
   FOREIGN KEY (UserName) REFERENCES DiaryUser(UserName)
 );
 
 CREATE TABLE Stared_Diaries
 (
   DiaryTitle VARCHAR(100) NOT NULL,
-  FOREIGN KEY (DiaryTitle) REFERENCES Diary(DiaryTitle)
+  FOREIGN KEY (DiaryTitle, UserName) REFERENCES Diary(DiaryTitle, UserName)
 );
 
 CREATE TABLE Tasks
@@ -45,7 +45,7 @@ CREATE TABLE TagDiary
   TagID INT NOT NULL,
   DiaryTitle VARCHAR(100) NOT NULL,
   FOREIGN KEY (TagID) REFERENCES Tags(TagID),
-  FOREIGN KEY (DiaryTitle) REFERENCES Diary(DiaryTitle)
+  FOREIGN KEY (DiaryTitle, UserName) REFERENCES Diary(DiaryTitle, UserName)
 );
 
 
