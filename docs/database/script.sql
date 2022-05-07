@@ -152,3 +152,26 @@ INSERT INTO TagDiary (TagID,DiaryTitle) VALUES (
   '2',
   'day 50'
 );    
+
+create or replace PROCEDURE getTags( DiaryT in VARCHAR2 ,dt out sys_refcursor )
+AS
+begin
+open dt FOR
+SELECT Tags.TagId, Tags.title, tagdiary.diarytitle
+FROM tags
+LEFT JOIN tagdiary 
+ON tags.tagid = tagdiary.tagid AND tagdiary.diarytitle = DiaryT;
+end getTags;
+
+create or replace PROCEDURE getUser(uname IN VARCHAR2 , Ux OUT VARCHAR2 )
+AS
+BEGIN 
+  SELECT username
+  into Ux
+  FROM diaryuser u
+  where u.username= uname;
+  
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    Ux := NULL;
+end getUser;
