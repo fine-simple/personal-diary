@@ -1,3 +1,10 @@
+DROP TABLE TagDiary CASCADE CONSTRAINTS PURGE;
+DROP TABLE Starred_Diaries CASCADE CONSTRAINTS PURGE;
+DROP TABLE Diary CASCADE CONSTRAINTS PURGE;
+DROP TABLE Tasks CASCADE CONSTRAINTS PURGE;
+DROP TABLE Tags CASCADE CONSTRAINTS PURGE;
+DROP TABLE DiaryUser CASCADE CONSTRAINTS PURGE;
+
 CREATE TABLE DiaryUser
 (
   UserName VARCHAR(40) NOT NULL,
@@ -9,17 +16,29 @@ CREATE TABLE DiaryUser
 
 CREATE TABLE Diary
 (
-  DiaryTitle VARCHAR(100) NOT NULL,
-  DiaryContent VARCHAR(500) NOT NULL,
+  Id INT NOT NULL,
+  Title VARCHAR(100) NOT NULL,
+  Content VARCHAR(500) NOT NULL,
   UserName VARCHAR(40) NOT NULL,
-  PRIMARY KEY (DiaryTitle, UserName),
-  FOREIGN KEY (UserName) REFERENCES DiaryUser(UserName)
+  PRIMARY KEY (Id),
+  FOREIGN KEY (UserName) REFERENCES DiaryUser(UserName),
+  UNIQUE (Title, UserName)
 );
 
-CREATE TABLE Stared_Diaries
+CREATE SEQUENCE diary_seq
+ START WITH     1
+ INCREMENT BY   1
+ NOCACHE
+ NOCYCLE;
+
+CREATE INDEX diary_index on Diary (
+  Title 
+);
+
+CREATE TABLE Starred_Diaries
 (
-  DiaryTitle VARCHAR(100) NOT NULL,
-  FOREIGN KEY (DiaryTitle, UserName) REFERENCES Diary(DiaryTitle, UserName)
+  DiaryId INT NOT NULL,
+  FOREIGN KEY (DiaryId) REFERENCES Diary(Id)
 );
 
 CREATE TABLE Tasks
@@ -42,69 +61,69 @@ CREATE TABLE Tags
 
 CREATE TABLE TagDiary
 (
-  TagID INT NOT NULL,
-  DiaryTitle VARCHAR(100) NOT NULL,
+  TagId INT NOT NULL,
+  DiaryId INT NOT NULL,
   FOREIGN KEY (TagID) REFERENCES Tags(TagID),
-  FOREIGN KEY (DiaryTitle, UserName) REFERENCES Diary(DiaryTitle, UserName)
+  FOREIGN KEY (DiaryId) REFERENCES Diary(Id)
 );
 
-
-INSERT INTO DiaryUser (UserName,Password,Firstname,Lastname) VALUES (
+INSERT INTO DiaryUser VALUES (
   'EslamEsam',
   '1234',
   'Eslam',
   'Esam'
 ); 
 
-INSERT INTO DiaryUser (UserName,Password,Firstname,Lastname) VALUES (
+INSERT INTO DiaryUser VALUES (
   'AhmedTawfik',
   '9876',
   'Ahmed',
   'Tawfik'
 ); 
 
-INSERT INTO DiaryUser (UserName,Password,Firstname,Lastname) VALUES (
+INSERT INTO DiaryUser VALUES (
   'MonayAhmed',
   '2468',
   'Monay',
   'Ahmed'
 );
 
-INSERT INTO Diary (DiaryTitle,DiaryContent,UserName) VALUES (
+INSERT INTO Diary VALUES (
+  '4',
   'day one',
   'our first test in diary app',
   'EslamEsam'
 ); 
 
-INSERT INTO Diary (DiaryTitle,DiaryContent,UserName) VALUES (
+INSERT INTO Diary VALUES (
+  '5',
   'day two',
   'another test',
   'MonayAhmed'
 );
 
 
-INSERT INTO Diary (DiaryTitle,DiaryContent,UserName) VALUES (
+INSERT INTO Diary VALUES (
+  '6',
   '5-5-2022',
   'this must have the date as a title',
   'AhmedTawfik'
 );
 
 
-INSERT INTO Diary (DiaryTitle,DiaryContent,UserName) VALUES (
+INSERT INTO Diary VALUES (
+  '7',
   'day 50',
   'link tag with diary',
   'EslamEsam'
 );  
 
 
-INSERT INTO Stared_Diaries (DiaryTitle) VALUES (
-  'day one'
-); 
+INSERT INTO Starred_Diaries VALUES (
+  '4'
+);
 
-
-
-
-INSERT INTO Tasks (TaskTitle,Deadline,Priority,TaskContent,UserName) VALUES (
+INSERT INTO Tasks VALUES (
   'task one',
   TO_DATE('5/5/2022', 'DD/MM/YYYY'),
   'h',
@@ -113,7 +132,7 @@ INSERT INTO Tasks (TaskTitle,Deadline,Priority,TaskContent,UserName) VALUES (
 ); 
 
 
-INSERT INTO Tasks (TaskTitle,Deadline,Priority,TaskContent,UserName) VALUES (
+INSERT INTO Tasks VALUES (
   'task 2',
   TO_DATE('5/5/2022', 'DD/MM/YYYY'),
   'm',
@@ -122,7 +141,7 @@ INSERT INTO Tasks (TaskTitle,Deadline,Priority,TaskContent,UserName) VALUES (
 ); 
 
 
-INSERT INTO Tasks (TaskTitle,Deadline,Priority,TaskContent,UserName) VALUES (
+INSERT INTO Tasks VALUES (
   '5-5-2022',
   TO_DATE('5/5/2022', 'DD/MM/YYYY'),
   'l',
@@ -131,47 +150,45 @@ INSERT INTO Tasks (TaskTitle,Deadline,Priority,TaskContent,UserName) VALUES (
 );
 
 
-INSERT INTO Tags (TagID,Title) VALUES (
+INSERT INTO TagDiary VALUES (
   '1',
-  'work'
-); 
-
-
-INSERT INTO Tags (TagID,Title) VALUES (
-  '2',
-  'family'
-); 
-
-
-INSERT INTO TagDiary (TagID,DiaryTitle) VALUES (
-  '1',
-  'day two'
+  '5'
 );
 
-INSERT INTO TagDiary (TagID,DiaryTitle) VALUES (
+INSERT INTO TagDiary VALUES (
   '2',
-  'day 50'
-);    
+  '7'
+);
 
-create or replace PROCEDURE getTags( DiaryT in VARCHAR2 ,dt out sys_refcursor )
+create or replace
+PROCEDURE getTags( DiaryT IN VARCHAR2 ,dt OUT sys_refcursor )
 AS
-begin
-open dt FOR
-SELECT Tags.TagId, Tags.title, tagdiary.diarytitle
-FROM tags
-LEFT JOIN tagdiary 
-ON tags.tagid = tagdiary.tagid AND tagdiary.diarytitle = DiaryT;
-end getTags;
+BEGIN
+OPEN dt FOR
+  SELECT Tags.TagId, Tags.title AS tagtitle, Diary.Title AS diarytitle
+  FROM tags
+  LEFT JOIN tagdiary
+  ON tags.tagid = tagdiary.tagid 
+  LEFT JOIN Diary
+  ON tagdiary.diaryId = Diary.Id AND Diary.Title = DiaryT;
+END getTags;
 
 create or replace PROCEDURE getUser(uname IN VARCHAR2 , Ux OUT VARCHAR2 )
 AS
 BEGIN 
   SELECT username
-  into Ux
+  INTO Ux
   FROM diaryuser u
-  where u.username= uname;
+  WHERE u.username= uname;
   
 EXCEPTION
   WHEN NO_DATA_FOUND THEN
     Ux := NULL;
-end getUser;
+END getUser;
+
+create or replace TRIGGER TRIGGER1
+BEFORE INSERT ON DIARY
+FOR EACH ROW 
+BEGIN
+  SELECT diary_seq.nextval INTO :new.id FROM dual;
+END;

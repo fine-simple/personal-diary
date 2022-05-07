@@ -14,9 +14,7 @@ namespace WindowsFormsApplication4
 {
     public partial class ManageDiaries : Form
     {
-
         OracleDataAdapter adapter;
-        OracleCommandBuilder builder;
         DataSet ds = new DataSet();
 
         public ManageDiaries()
@@ -26,13 +24,14 @@ namespace WindowsFormsApplication4
 
         private void button2_Click(object sender, EventArgs e)
         {
-            builder = new OracleCommandBuilder(adapter);
+            OracleCommandBuilder builder = new OracleCommandBuilder(adapter);
+            Console.WriteLine(ds.Tables[0].Rows.Count);
             adapter.Update(ds.Tables[0]);
         }
 
         private void ManageDiaries_Load(object sender, EventArgs e)
         {
-            string cmdstr = "Select * from Diary Where username=:name";
+            string cmdstr = "Select title, content, username from Diary Where username=:name";
             adapter = new OracleDataAdapter(cmdstr, Globals.ordb);
             adapter.SelectCommand.Parameters.Add("name", Globals.username);
             adapter.Fill(ds);
@@ -65,22 +64,30 @@ namespace WindowsFormsApplication4
         {
             if (e.RowIndex < 0)
                 return;
-            bool addNew = e.RowIndex == dataGridView1.Rows.Count - 1;
-            string diaryTitle = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
-            string content = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
+            string diaryTitle = dataGridView1.Rows[e.RowIndex].Cells["title"].Value.ToString();
+            string content = dataGridView1.Rows[e.RowIndex].Cells["content"].Value.ToString();
+            Console.WriteLine(diaryTitle);
             Diary diary = new Diary(diaryTitle, content);
             diary.ShowDialog();
             if (diary.DialogResult != DialogResult.OK)
                 return;
+            
+            DataTable table = (DataTable)(dataGridView1.DataSource);
+            bool addNew = e.RowIndex == dataGridView1.Rows.Count - 1;
             if(addNew)
             {
-                //DataTable table = (DataTable)dataGridView1.DataSource;
-                //table.Rows.Add(diary.getTitle(), diary.getContent());
+                DataRow row = table.NewRow();
+                row["title"] = diary.getTitle();
+                row["content"] = diary.getContent();
+                row["username"] = Globals.username;
+                ds.Tables[0].Rows.Add(row);
+                dataGridView1.Rows.RemoveAt(dataGridView1.Rows.Count - 2);
             }
             else
             {
-                dataGridView1.Rows[e.RowIndex].Cells[0].Value = diary.getTitle();
-                dataGridView1.Rows[e.RowIndex].Cells[1].Value = diary.getContent();
+                dataGridView1.Rows[e.RowIndex].Cells["title"].Value = diary.getTitle();
+                dataGridView1.Rows[e.RowIndex].Cells["content"].Value = diary.getContent();
+                dataGridView1.Rows[e.RowIndex].Cells["username"].Value = Globals.username;
             }
         }
     }

@@ -34,7 +34,7 @@ namespace Personal_Diary
             cmd.CommandType = CommandType.Text;
             cmd.CommandText = "SELECT * FROM DiaryUser WHERE username=:name AND password=:pass";
             cmd.Parameters.Add("name", usernameTxtBox.Text);
-            cmd.Parameters.Add("pass", passTxtBox.Text.ToArray());
+            cmd.Parameters.Add("pass", passTxtBox.Text);
             OracleDataReader dr = cmd.ExecuteReader();
 
             if (dr.Read())

@@ -15,12 +15,10 @@ namespace Personal_Diary
     {
         private string title;
         private string content;
-        private Dictionary<string, int> tags;
         public Diary(string title, string content)
         {
             this.title = title;
             this.content = content;
-            tags = new Dictionary<string, int>();
             InitializeComponent();
         }
         private void Diary_Load(object sender, EventArgs e)
@@ -38,23 +36,19 @@ namespace Personal_Diary
 
             while (dr.Read())
             {
-                tagsCheckedListBox.Items.Add(dr["title"].ToString(), dr["diarytitle"].ToString().Length > 0);
-                tags.Add(dr["title"].ToString(), Convert.ToInt32(dr["TagId"].ToString()));
+                tagsCheckedListBox.Items.Add(dr["tagtitle"].ToString(), dr["diarytitle"].ToString().Length > 0);
             }
             Globals.conn.Close();
         }
+        public string getTitle() { return title; }
+        public string getContent() { return content; }
 
-        private void Diary_FormClosing(object sender, FormClosingEventArgs e)
+        private void saveBtn_Click(object sender, EventArgs e)
         {
             title = titleTxtBox.Text;
             content = contentRichBox.Text;
             DialogResult = DialogResult.OK;
-        }
-        public string getTitle() { return title; }
-        public string getContent() { return content; }
-        public CheckedListBox getTags()
-        {
-            return tagsCheckedListBox;
+            Close();
         }
     }
 }

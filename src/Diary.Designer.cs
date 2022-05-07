@@ -35,6 +35,7 @@ namespace Personal_Diary
             this.titleTxtBox = new System.Windows.Forms.TextBox();
             this.tagsCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.saveBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -74,6 +75,7 @@ namespace Personal_Diary
             // tagsCheckedListBox
             // 
             this.tagsCheckedListBox.CheckOnClick = true;
+            this.tagsCheckedListBox.Enabled = false;
             this.tagsCheckedListBox.FormattingEnabled = true;
             this.tagsCheckedListBox.Location = new System.Drawing.Point(289, 81);
             this.tagsCheckedListBox.Name = "tagsCheckedListBox";
@@ -89,11 +91,22 @@ namespace Personal_Diary
             this.label3.TabIndex = 6;
             this.label3.Text = "Tags";
             // 
+            // saveBtn
+            // 
+            this.saveBtn.Location = new System.Drawing.Point(180, 415);
+            this.saveBtn.Name = "saveBtn";
+            this.saveBtn.Size = new System.Drawing.Size(75, 26);
+            this.saveBtn.TabIndex = 7;
+            this.saveBtn.Text = "Save";
+            this.saveBtn.UseVisualStyleBackColor = true;
+            this.saveBtn.Click += new System.EventHandler(this.saveBtn_Click);
+            // 
             // Diary
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(436, 426);
+            this.ClientSize = new System.Drawing.Size(436, 453);
+            this.Controls.Add(this.saveBtn);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.tagsCheckedListBox);
             this.Controls.Add(this.titleTxtBox);
@@ -104,7 +117,6 @@ namespace Personal_Diary
             this.Name = "Diary";
             this.ShowIcon = false;
             this.Text = "Diary";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Diary_FormClosing);
             this.Load += new System.EventHandler(this.Diary_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -119,5 +131,6 @@ namespace Personal_Diary
         private System.Windows.Forms.TextBox titleTxtBox;
         private System.Windows.Forms.CheckedListBox tagsCheckedListBox;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button saveBtn;
     }
 }
